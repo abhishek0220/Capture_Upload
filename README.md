@@ -1,10 +1,8 @@
 # upload
 
-A new Flutter project.
+Upload Images directly to your Web Server as a from of http requests. You need to setup webserver which takes base-64 string, decode it and save in a file
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
 
