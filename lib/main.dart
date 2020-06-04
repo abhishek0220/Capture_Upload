@@ -23,6 +23,35 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final String phpEndPoint = 'http://192.168.1.100:5000/Generate';
+  File file;
+  void _choose() async{
+    file = await ImagePicker.pickImage(source: ImageSource.camera);
+  }
+  void _upload() {
+    if(file == null) return;
+    String base64Image = base64Encode(file.readAsBytesSync());
+    print(base64Image);
+    String fileName = file.path.split("/").last;
+    print(base64Image.length);
+    http.post(phpEndPoint, body:{
+      "image":base64Image,
+      "name":fileName,
+    }).then((res) {
+      print(res.statusCode);
+      if(res.statusCode == 200){
+        String qrdata = res.body;
+        var route = new MaterialPageRoute(
+          builder: (BuildContext context) => 
+            new ShowQR(qrdata),
+        );
+        Navigator.of(context).push(route);
+      }
+    }).catchError((err) {
+      print(err);
+    });
+    print('done');
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,9 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             ],
           ),
-          file == null
-            ? Text('No image Selected')
-            : Image.file(file)
         ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
